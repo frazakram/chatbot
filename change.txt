@@ -1,0 +1,58 @@
+C:\Users\fraza\Desktop\raga_ai\vscode\self_project\myenv4\main.py:19: LangChainDeprecationWarning: The class ChatOpenAI was deprecated in LangChain 0.0.10 and will be removed in 1.0. An updated version of the class exists in the :class:~langchain-openai package and should be used instead. To use it run pip install -U :class:~langchain-openai and import as from :class:~langchain_openai import ChatOpenAI`.
+  llm = ChatOpenAI(temperature=0.5, model_name="gpt-3.5-turbo", api_key=api_key)
+ChatGPT said:
+ChatGPT
+The warning indicates that the ChatOpenAI class you are using has been deprecated in the version of LangChain you have installed. Instead, you should import ChatOpenAI from the langchain_openai package.
+
+Here's how to update your code:
+
+Install the Correct Package: If you haven't already, ensure that you install the langchain-openai package:
+
+bash
+Copy code
+pip install -U langchain-openai
+Update the Import Statement: Change your import statement to import ChatOpenAI from langchain_openai.
+
+Here's the updated code:
+
+python
+Copy code
+import os
+from dotenv import load_dotenv
+import streamlit as st
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI  # Updated import
+from langchain_core.output_parsers import StrOutputParser
+
+# Load environment variables
+load_dotenv("C:/Users/fraza/Desktop/raga_ai/vscode/self_project/myenv4/key.env")
+api_key = os.environ.get("OPENAI_API_KEY")
+
+# Define the chat prompt template
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful assistant. Please respond to the user."),
+    ("user", "Question: {question}")
+])
+
+# Initialize the ChatOpenAI model
+llm = ChatOpenAI(temperature=0.5, model_name="gpt-3.5-turbo", api_key=api_key)
+
+# Set up output parser
+output_parser = StrOutputParser()
+
+# Combine prompt, model, and output parser into a chain
+chain = prompt | llm | output_parser
+
+def my_streamlit_app():
+    st.title("My Streamlit App")
+    user_input = st.text_input("Enter your queries")
+
+    if user_input:  # Check if there's input from the user
+        response = chain.invoke({"question": user_input})
+        st.write(response)
+
+if __name__ == '__main__':
+    my_streamlit_app()
+Summary of Changes:
+Import from langchain_openai: The import statement for ChatOpenAI has been changed to avoid deprecation issues.
+After making these changes, your code should work without the deprecation warning. Make sure to run your Streamlit app again after updating!
